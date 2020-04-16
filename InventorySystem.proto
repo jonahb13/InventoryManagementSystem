@@ -1,0 +1,104 @@
+
+syntax = "proto3";
+package ecommerce;
+
+service InventorySystem {
+    // Add new product to the PRODUCT database, with unique id and name.
+    rpc addNewProduct(Product) returns (ProductID) {}
+
+    // Get a product from the database by given valid id and/or name.
+    rpc getProduct(ProductQuery) returns (Product) {}
+
+    // Update the allowed fields of a specific product, fields are ( description,manufacturer,
+    // wholesale_cost, sale_cost, stock). Return a message result to the client that tells wither
+    // the product has been updated or not.
+    rpc updateProduct(Product) returns (UpdateResult) {}
+
+    // Stream Manufacturer Products by a given Manufacturer name.
+    rpc getManufacturerProducts(Manufacturer) returns (stream Product) {}
+
+    // List/stream all products' name and counts that has been created.
+    rpc getInStockProducts(Empty) returns (stream ProductCount) {}
+
+    // List/stream all products info that are in the current stock.
+    rpc getAllProducts(Empty) returns (stream Product) {}
+
+    // create a new order by given order's info and return an order id in success. Otherwise, raise exception.
+    rpc createOrder(Order) returns (OrderID) {}
+
+    // Get a specific order from ORDER Database by given a valid order-id. Otherwise, exception will be raised.
+    rpc getOrder(OrderID) returns (Order) {}
+
+    // Update the allowed fields of a specific order, fields are ( destination,date, add_products
+    // remove_products, is_paid, is_shipped). Return a message result to the client that tells wither
+    // the order has been updated or not.
+    rpc amendOrder(UpdateOrder) returns (UpdateResult) {}
+
+    // Stream all Unshipped and/or Unpaid orders, by given queries status.
+    rpc getUnshippedAndOrUnpaidOrders(UnshippedAndOrUnpaidQuery) returns (stream Order) {}
+}
+
+message Product {
+    string id_ = 1;
+    string name = 2;
+    string description = 3;
+    string manufacturer = 4;
+    float wholesale_cost = 5;
+    float sale_cost = 6;
+    int32 stock = 7;
+}
+
+message ProductID {
+    string product_id = 1;
+}
+
+message ProductCount {
+    string product_id = 1;
+    string product_name = 2;
+    int32 quantity = 3;
+}
+
+message ProductQuery {
+    string product_id = 1;
+    string product_name = 2;
+}
+
+
+message Manufacturer {
+    string manufacturer = 1;
+}
+
+message Order {
+    string id_ = 1;
+    string destination = 2;
+    string date = 3;
+    repeated Product products = 4;  
+    bool is_paid = 5;
+    bool is_shipped = 6;
+}
+
+message UpdateOrder {
+    string id_ = 1;
+    string destination = 2;
+    string date = 3;
+    repeated Product add_products = 4;  
+    repeated Product remove_products = 5; 
+    bool is_paid = 6;
+    bool is_shipped = 7;
+}
+
+message OrderID {
+    string value = 1;
+}
+
+message UnshippedAndOrUnpaidQuery {
+    bool query_unshipped = 1;
+    bool query_unpaid = 2;
+}
+
+message UpdateResult {
+    string result = 1;
+}
+
+message Empty{
+}
