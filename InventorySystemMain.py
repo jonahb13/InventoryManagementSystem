@@ -16,7 +16,7 @@ def parse_grpc(args):
     server using gRPC. Calls gRPC methods based off 
     other arguments provided in the command line.
     """
-    with grpc.insecure_channel('3.17.130.209:50051') as channel:        
+    with grpc.insecure_channel('IP_ADDRESS:50051') as channel:        
         stub = InventorySystem_pb2_grpc.InventorySystemStub(channel) 
         client = ClientgRPC()
         if args.rpc == 'add_product':
@@ -49,7 +49,7 @@ def parse_xmlrpc(args):
     server using XML-RPC. Calls XML-RPC methods based 
     off other arguments provided in the command line.
     """
-    with xmlrpc.client.ServerProxy("http://3.17.130.209:50052/", allow_none=True) as proxy:
+    with xmlrpc.client.ServerProxy("IP_ADDRESS:50052/", allow_none=True) as proxy:
         client = ClientXMLRPC()
         if args.rpc == 'add_product':
             client.add_product(proxy, args.name, args.description, args.manufacturer,
